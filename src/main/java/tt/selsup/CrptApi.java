@@ -58,12 +58,13 @@ public class CrptApi{
         return formBodyBuilder.toString();
     }
     private String save(Document document, String signature) throws InterruptedException {
+
         long current = System.currentTimeMillis();
         if(current - lastTime < interval){
             if(requestCounter < requestLimit){
                 requestCounter++;
                 lastTime = current;
-                return saveDocument(document, signature);
+                executorService.execute(()-> saveDocument(document, signature));
             }else {
                 requestCounter = 0;
                 lastTime = current;
